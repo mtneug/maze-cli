@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+applicationName = 'maze'
+mainClassName = 'de.mtneug.maze_cli.Main'
+version = '1.0'
+
+sourceCompatibility = 7
+
+repositories {
+  mavenCentral()
+  maven {
+    url "http://mvn.erichseifert.de/maven2"
+  }
+}
+
+dependencies {
+  compile group: 'commons-cli', name: 'commons-cli', version: '1.3'
+  compile group: 'org.reflections', name: 'reflections', version: '0.9.9'
+  compile group: 'de.erichseifert.vectorgraphics2d', name: 'VectorGraphics2D', version: '0.9.1'
+}
