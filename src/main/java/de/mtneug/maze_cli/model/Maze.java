@@ -22,12 +22,12 @@ public class Maze implements Iterable<Cell> {
   /**
    * The width of the maze.
    */
-  public final int width;
+  private final int width;
 
   /**
    * The height of the maze.
    */
-  public final int height;
+  private final int height;
 
   /**
    * The 2d grid storing the cells.
