@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Helper methods for annotation
  *
- * @author Matthias Neugebauer.
+ * @author Matthias Neugebauer
  * @version 1.0
  * @since 1.0
  */
