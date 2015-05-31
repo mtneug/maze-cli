@@ -9,7 +9,6 @@ import de.mtneug.maze_cli.model.*;
 
 import java.util.*;
 
-import static de.mtneug.maze_cli.algorithms.AbstractMazeAlgorithm.State.FINISHED;
 import static de.mtneug.maze_cli.model.DifficultyLevel.HARD;
 import static de.mtneug.maze_cli.model.DifficultyLevel.MEDIUM;
 import static de.mtneug.maze_cli.model.Orientation.HORIZONTAL;
@@ -103,8 +102,8 @@ public class M extends AbstractMazeAlgorithm {
   @Override
   protected void prepareMaze() {
     super.prepareMaze();
-    maze.setStartCell(0, 1);
-    maze.setEndCell(maze.getWidth() - 1, maze.getHeight() - 2);
+    output.setStartCell(0, 1);
+    output.setEndCell(output.getWidth() - 1, output.getHeight() - 2);
   }
 
   /**
@@ -116,7 +115,7 @@ public class M extends AbstractMazeAlgorithm {
     generatePassableCellSet();
 
     // 2. Run Prim on the passable area beginning with the start cell
-    primOnCellSet(passableCellSet, maze.getStartCell());
+    primOnCellSet(passableCellSet, output.getStartCell());
 
     // 3. Run Prim on the not passable area beginning with a random cell
     primOnCellSet(getNonPassableCells());
@@ -124,8 +123,6 @@ public class M extends AbstractMazeAlgorithm {
     // Print statistics if requested
     if (printingStatistics)
       printStatistics();
-
-    state = FINISHED;
   }
 
   /**
@@ -138,28 +135,28 @@ public class M extends AbstractMazeAlgorithm {
   private void generatePassableCellSet() {
     // On the hardest level, all area is passable
     if (difficulty == MAXIMUM_DIFFICULTY) {
-      passableCellSet.addAll(maze.getCells());
+      passableCellSet.addAll(output.getCells());
       return;
     }
 
     ///////
     // initialize local help variables
     final DifficultyLevel level = DifficultyLevel.getDifficultyLevel(difficulty, MAXIMUM_DIFFICULTY);
-    final Orientation shorterSide = (maze.getWidth() < maze.getHeight())
+    final Orientation shorterSide = (output.getWidth() < output.getHeight())
         ? HORIZONTAL
         : VERTICAL;
-    final int shorterSideLength = (maze.getWidth() < maze.getHeight())
-        ? maze.getWidth()
-        : maze.getHeight();
+    final int shorterSideLength = (output.getWidth() < output.getHeight())
+        ? output.getWidth()
+        : output.getHeight();
 
     ///////
     // 1. Get every DASH_DISTANCEs Cell on the path from start to end
-    final AbstractCalculatedPath initialPath = new DashedCalculatedPath(maze.getStartCell(), maze.getEndCell(), maze, 1, DASH_DISTANCE, false);
+    final AbstractCalculatedPath initialPath = new DashedCalculatedPath(output.getStartCell(), output.getEndCell(), output, 1, DASH_DISTANCE, false);
     initialPath.calculatePath();
 
     final List<Cell> pathCells = new ArrayList<>(initialPath.getPathCells());
-    pathCells.remove(maze.getStartCell());
-    pathCells.remove(maze.getEndCell());
+    pathCells.remove(output.getStartCell());
+    pathCells.remove(output.getEndCell());
 
     ///////
     // 2. Beginning at level MEDIUM, choose new random cells along the shorter side
@@ -169,9 +166,9 @@ public class M extends AbstractMazeAlgorithm {
         final int newPosition = random.nextInt(shorterSideLength);
 
         if (shorterSide == HORIZONTAL)
-          pathCells.set(i, maze.getCell(newPosition, oldCell.getPosition().y));
+          pathCells.set(i, output.getCell(newPosition, oldCell.getPosition().y));
         else
-          pathCells.set(i, maze.getCell(oldCell.getPosition().x, newPosition));
+          pathCells.set(i, output.getCell(oldCell.getPosition().x, newPosition));
       }
     }
 
@@ -188,37 +185,37 @@ public class M extends AbstractMazeAlgorithm {
 
           if (newPosition < 0)
             newPosition = 0;
-          else if (newPosition >= maze.getHeight())
-            newPosition = maze.getHeight() - 1;
+          else if (newPosition >= output.getHeight())
+            newPosition = output.getHeight() - 1;
 
-          pathCells.set(i, maze.getCell(oldCell.getPosition().x, newPosition));
+          pathCells.set(i, output.getCell(oldCell.getPosition().x, newPosition));
         } else {
           newPosition = oldCell.getPosition().x + deltaPosition;
 
           if (newPosition < 0)
             newPosition = 0;
-          else if (newPosition >= maze.getWidth())
-            newPosition = maze.getWidth() - 1;
+          else if (newPosition >= output.getWidth())
+            newPosition = output.getWidth() - 1;
 
-          pathCells.set(i, maze.getCell(newPosition, oldCell.getPosition().y));
+          pathCells.set(i, output.getCell(newPosition, oldCell.getPosition().y));
         }
       }
     }
 
     ///////
     // 4. Complete path cells with start and end
-    pathCells.remove(maze.getStartCell());
-    pathCells.remove(maze.getEndCell());
+    pathCells.remove(output.getStartCell());
+    pathCells.remove(output.getEndCell());
 
-    pathCells.add(0, maze.getStartCell());
-    pathCells.add(maze.getEndCell());
+    pathCells.add(0, output.getStartCell());
+    pathCells.add(output.getEndCell());
 
     ///////
     // 5. Build the path and add the cells to the passable cell set
     final double pathWidth = difficulty / MAXIMUM_DIFFICULTY * shorterSideLength * SHORTER_SIDE_PERCENTAGE;
 
     for (int i = 0; i < pathCells.size() - 1; i++) {
-      final WidthCalculatedPath pathSegment = new WidthCalculatedPath(pathCells.get(i), pathCells.get(i + 1), maze, pathWidth);
+      final WidthCalculatedPath pathSegment = new WidthCalculatedPath(pathCells.get(i), pathCells.get(i + 1), output, pathWidth);
       pathSegment.calculatePath();
       passableCellSet.addAll(pathSegment.getAreaCells());
     }
@@ -300,11 +297,11 @@ public class M extends AbstractMazeAlgorithm {
     System.out.println("" +
 
             // Dimensions
-            maze.getWidth() + "," +
-            maze.getHeight() + "," +
+            output.getWidth() + "," +
+            output.getHeight() + "," +
 
             // Number of all cells
-            maze.getWidth() * maze.getHeight() + "," +
+            output.getWidth() * output.getHeight() + "," +
 
             // Number of passable cells
             getPassableCellSet().size() + "," +
@@ -339,7 +336,7 @@ public class M extends AbstractMazeAlgorithm {
    * @return The non passable cell set.
    */
   public Set<Cell> getNonPassableCells() {
-    return Sets.difference(new HashSet<Cell>(maze.getCells()), passableCellSet);
+    return Sets.difference(new HashSet<Cell>(output.getCells()), passableCellSet);
   }
 
   /**

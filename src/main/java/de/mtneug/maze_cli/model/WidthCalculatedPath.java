@@ -112,4 +112,14 @@ public class WidthCalculatedPath extends SimpleCalculatedPath {
   public List<Cell> getPathCells() {
     throw new UnsupportedOperationException("getPathCells(); use getAreaCells() instead");
   }
+
+  /**
+   * Whether there are any cells on the path.
+   *
+   * @return {@code true} if there are no cells on the path, {@code false} otherwise.
+   */
+  @Override
+  public boolean isEmpty() {
+    return area.isEmpty();
+  }
 }

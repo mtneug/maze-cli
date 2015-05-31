@@ -9,10 +9,10 @@ import org.apache.commons.cli.*;
 import java.util.List;
 
 /**
+ * Common base class for all CLI arguments to Java object adapter.
  *
- *
- * @param <T>
- * @author Matthias Neugebauer.
+ * @param <T> The type of the returned object.
+ * @author Matthias Neugebauer
  */
 public abstract class AbstractCliAdapter<T> {
   /**

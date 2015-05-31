@@ -13,8 +13,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import static de.mtneug.maze_cli.algorithms.AbstractMazeAlgorithm.State.FINISHED;
-
 /**
  * Implementation of the Prim algorithm for maze generation. Loosely based on the
  * <a hreg="http://en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_Prim.27s_algorithm">Wikipedia
@@ -54,9 +52,9 @@ public class Prim extends AbstractIterativeMazeAlgorithm {
   @Override
   protected void before() {
     // save all walls of a random cell
-    saveWalls(maze.getCell(
-        random.nextInt(maze.getWidth()),
-        random.nextInt(maze.getHeight())
+    saveWalls(output.getCell(
+        random.nextInt(output.getWidth()),
+        random.nextInt(output.getHeight())
     ));
   }
 
@@ -64,11 +62,9 @@ public class Prim extends AbstractIterativeMazeAlgorithm {
    * The loop of the Prim maze generation algorithm.
    */
   @Override
-  protected void step() {
-    if (wallSet.isEmpty()) {
-      state = FINISHED;
-      return;
-    }
+  protected boolean step() {
+    if (wallSet.isEmpty())
+      return false;
 
     final Wall[] walls = wallSet.toArray(new Wall[wallSet.size()]);
     final Wall wall = walls[random.nextInt(wallSet.size())];
@@ -86,6 +82,8 @@ public class Prim extends AbstractIterativeMazeAlgorithm {
       // Save all relevant walls
       saveWalls(neighbor);
     }
+
+    return !wallSet.isEmpty();
   }
 
   /**

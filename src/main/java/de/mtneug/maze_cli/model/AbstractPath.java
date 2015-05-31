@@ -54,4 +54,13 @@ public abstract class AbstractPath {
   public List<Cell> getPathCells() {
     return Collections.unmodifiableList(path);
   }
+
+  /**
+   * Whether there are any cells on the path.
+   *
+   * @return {@code true} if there are no cells on the path, {@code false} otherwise.
+   */
+  public boolean isEmpty() {
+    return path.isEmpty();
+  }
 }

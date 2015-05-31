@@ -6,12 +6,11 @@ package de.mtneug.maze_cli.algorithms;
 
 import java.util.Random;
 
-import static de.mtneug.maze_cli.algorithms.AbstractMazeAlgorithm.State.FINISHED;
-
 /**
- * Common class of all maze algorithms which mainly consist of a loop. Implementing a {@link AbstractIterativeMazeAlgorithm}
- * is done by implementing the {@link #step()} method, which will be executed until the {@link #state} is set to
- * {@link State#FINISHED}. Code that should be run before and after the loop goes into the methods with the same name.
+ * Common class of all maze algorithms which mainly consist of a loop. Implementing a
+ * {@link AbstractIterativeMazeAlgorithm} is done by implementing the {@link #step()} method, which will be executed
+ * as long it returns {@code true}. Code that should be run before and after the loop goes into the methods with the
+ * same name.
  *
  * @author Matthias Neugebauer
  * @version 1.0
@@ -53,15 +52,18 @@ public abstract class AbstractIterativeMazeAlgorithm extends AbstractMazeAlgorit
   @Override
   protected void running() {
     before();
-    for (; state != FINISHED; steps++) step();
+    while (step()) steps++;
     after();
   }
 
   /**
-   * This method is called after {@link #before()}, once per iteration and before {@link #after()}. It is also responsible for
-   * stopping the iterations by setting {@link #state} to {@link State#FINISHED}.
+   * This method is called after {@link #before()}, once per iteration and before {@link #after()}. It is also
+   * responsible for controlling the iteration by returning {@code true} if there should be a next iteration or
+   * {@code false} if it should not.
+   *
+   * @return {@code true} if there should be a next iteration, {@code false} if not.
    */
-  protected abstract void step();
+  protected abstract boolean step();
 
   /**
    * Returns the current number of iterations.
