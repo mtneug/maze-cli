@@ -52,7 +52,7 @@ public class Cell {
    */
   public Cell(Point position) {
     if (position == null)
-      throw new IllegalArgumentException("Cells need a position");
+      throw new IllegalArgumentException("cells need a position");
 
     this.position = position;
   }
@@ -191,4 +191,6 @@ public class Cell {
     if (labels != null ? !labels.equals(cell.labels) : cell.labels != null) return false;
     return !(neighbors != null ? !neighbors.equals(cell.neighbors) : cell.neighbors != null);
   }
+
+  // TODO: hashCode
 }
