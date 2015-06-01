@@ -308,19 +308,22 @@ public class M extends AbstractMazeAlgorithm {
    * @throws IOException if it can't write the statistics to the specified file.
    */
   private void writeStatistics() throws IOException {
-    String text =
-        // Dimensions
+    String text = "" +
+        // identifier
+        output.hashCode() + "," +
+
+        // dimensions
         output.getWidth() + "," +
-            output.getHeight() + "," +
+        output.getHeight() + "," +
 
-            // Number of all cells
-            output.getWidth() * output.getHeight() + "," +
+        // number of all cells
+        output.getWidth() * output.getHeight() + "," +
 
-            // Number of passable cells
-            getPassableCellSet().size() + "," +
+        // number of passable cells
+        getPassableCellSet().size() + "," +
 
-            // Number of non-passable cells
-            getNonPassableCells().size();
+        // number of non-passable cells
+        getNonPassableCells().size();
 
     // TODO: how to lower the synchronization if write happens to different files?
     synchronized (LOCK) {
