@@ -68,8 +68,8 @@ public abstract class AbstractMazeOutputCliAdapter extends AbstractCliAdapter<Ab
   protected MazeSolutions createMazeSolutions(Maze maze, CommandLine commandLine) {
     String solverName = DEFAULT_SOLVER_NAME;
 
-    if (commandLine.hasOption("solver"))
-      solverName = commandLine.getOptionValue("solver");
+    if (commandLine.hasOption("solver-name"))
+      solverName = commandLine.getOptionValue("solver-name");
 
     try {
       return doCreateMazeSolutions(maze, solverName);
@@ -117,7 +117,7 @@ public abstract class AbstractMazeOutputCliAdapter extends AbstractCliAdapter<Ab
     super.buildOptions();
 
     options.addOption(Option.builder("s")
-            .longOpt("solver")
+            .longOpt("solver-name")
             .desc("use SOLVER to solve the maze")
             .hasArg().numberOfArgs(1).argName("SOLVER").type(STRING_VALUE)
             .build()
