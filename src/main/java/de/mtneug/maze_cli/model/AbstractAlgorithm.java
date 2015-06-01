@@ -54,8 +54,10 @@ public abstract class AbstractAlgorithm<T> implements Callable<T> {
 
   /**
    * Code of the algorithm.
+   *
+   * @throws Exception
    */
-  protected abstract void running();
+  protected abstract void running() throws Exception;
 
   /**
    * Returns the state the algorithm is currently in.

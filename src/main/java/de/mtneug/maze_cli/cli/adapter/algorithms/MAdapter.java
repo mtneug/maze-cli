@@ -12,6 +12,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 
 import static org.apache.commons.cli.PatternOptionBuilder.NUMBER_VALUE;
+import static org.apache.commons.cli.PatternOptionBuilder.STRING_VALUE;
 
 /**
  * Adapter for the M maze generation algorithm.
@@ -38,7 +39,7 @@ public class MAdapter extends AbstractMazeAlgorithmCliAdapter {
         height,
         createRandom(commandLine),
         ((Long) commandLine.getParsedOptionValue("m-difficulty")).intValue(),
-        commandLine.hasOption("m-print-statistics")
+        commandLine.getOptionValue("m-write-statistics-path")
     );
   }
 
@@ -57,8 +58,9 @@ public class MAdapter extends AbstractMazeAlgorithmCliAdapter {
             .build()
     );
     options.addOption(Option.builder()
-            .longOpt("m-print-statistics")
-            .desc("print statistics about the maze to standard output")
+            .longOpt("m-write-statistics-path")
+            .desc("write statistics to PATH")
+            .hasArg().numberOfArgs(1).argName("PATH").type(STRING_VALUE)
             .build()
     );
   }

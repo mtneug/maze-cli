@@ -7,6 +7,9 @@ package de.mtneug.maze_cli.algorithms;
 import com.google.common.collect.Sets;
 import de.mtneug.maze_cli.model.*;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 import static de.mtneug.maze_cli.model.DifficultyLevel.HARD;
@@ -59,6 +62,11 @@ public class M extends AbstractMazeAlgorithm {
   public final static int MAXIMUM_DIFFICULTY = 100;
 
   /**
+   * A lock object to synchronize multiple threads on.
+   */
+  public final static Object LOCK = new Object();
+
+  /**
    * The difficulty.
    */
   private final double difficulty;
@@ -69,20 +77,22 @@ public class M extends AbstractMazeAlgorithm {
   private final Set<Cell> passableCellSet = new LinkedHashSet<>();
 
   /**
-   * Whether to print out statistics about the generated maze.
+   * Path to a file where statistics should be written. {@code null} if none should be written.
    */
-  private boolean printingStatistics;
+  private String writeStatisticsPath;
 
   /**
    * The constructor.
    *
-   * @param width              The width of the maze to generate.
-   * @param height             The height of the maze to generate.
-   * @param random             The random number generator object to use when creating the maze.
-   * @param difficulty         The difficulty of the maze to generate. It should be a value between 0 and 100, where 0 is the
-   * @param printingStatistics Whether to print out statistics about the generated maze.
+   * @param width               The width of the maze to generate.
+   * @param height              The height of the maze to generate.
+   * @param random              The random number generator object to use when creating the maze.
+   * @param difficulty          The difficulty of the maze to generate. It should be a value between 0 and 100, where 0
+   *                            is the
+   * @param writeStatisticsPath Path to a file where statistics should be written. {@code null} if none should be
+   *                            written.
    */
-  public M(int width, int height, Random random, int difficulty, boolean printingStatistics) {
+  public M(int width, int height, Random random, int difficulty, String writeStatisticsPath) {
     super(width, height, random);
 
     if (difficulty < 0)
@@ -92,7 +102,7 @@ public class M extends AbstractMazeAlgorithm {
     else
       this.difficulty = difficulty;
 
-    this.printingStatistics = printingStatistics;
+    this.writeStatisticsPath = writeStatisticsPath;
   }
 
   /**
@@ -108,9 +118,11 @@ public class M extends AbstractMazeAlgorithm {
 
   /**
    * The main method wrapping the steps for the generation of the maze.
+   *
+   * @throws IOException if it can't write the statistics to the specified file.
    */
   @Override
-  protected void running() {
+  protected void running() throws IOException {
     // 1. Generate area of cells, which is passable
     generatePassableCellSet();
 
@@ -121,8 +133,8 @@ public class M extends AbstractMazeAlgorithm {
     primOnCellSet(getNonPassableCells());
 
     // Print statistics if requested
-    if (printingStatistics)
-      printStatistics();
+    if (writeStatisticsPath != null)
+      writeStatistics();
   }
 
   /**
@@ -291,13 +303,14 @@ public class M extends AbstractMazeAlgorithm {
   }
 
   /**
-   * Prints statistics about the generated maze.
+   * Writes statistics about the generated maze the file located at {@link #writeStatisticsPath}.
+   *
+   * @throws IOException if it can't write the statistics to the specified file.
    */
-  private void printStatistics() {
-    System.out.println("" +
-
-            // Dimensions
-            output.getWidth() + "," +
+  private void writeStatistics() throws IOException {
+    String text =
+        // Dimensions
+        output.getWidth() + "," +
             output.getHeight() + "," +
 
             // Number of all cells
@@ -307,8 +320,15 @@ public class M extends AbstractMazeAlgorithm {
             getPassableCellSet().size() + "," +
 
             // Number of non-passable cells
-            getNonPassableCells().size()
-    );
+            getNonPassableCells().size();
+
+    // TODO: how to lower the synchronization if write happens to different files?
+    synchronized (LOCK) {
+      try (PrintWriter fileWriter = new PrintWriter(new FileWriter(writeStatisticsPath, true))) {
+        fileWriter.println(text);
+        fileWriter.flush();
+      }
+    }
   }
 
   /**
@@ -340,20 +360,20 @@ public class M extends AbstractMazeAlgorithm {
   }
 
   /**
-   * Check if statistics about the generated maze are printed to standard output.
+   * Returns the path to a file where statistics should be written. {@code null} if none should be written.
    *
-   * @return {@code true} if statistics are printed, {@code false} otherwise.
+   * @return The path to a file where statistics should be written.
    */
-  public boolean isPrintingStatistics() {
-    return printingStatistics;
+  public String getWriteStatisticsPath() {
+    return writeStatisticsPath;
   }
 
   /**
-   * Set whether statistics about the generated maze are printed to standard output.
+   * Sets the path to a file where statistics should be written. Pass {@code null} if none should be written.
    *
-   * @param printingStatistics Whether to print out statistics.
+   * @param writeStatisticsPath The new path or {@code null}.
    */
-  public void setPrintingStatistics(boolean printingStatistics) {
-    this.printingStatistics = printingStatistics;
+  public void setWriteStatisticsPath(String writeStatisticsPath) {
+    this.writeStatisticsPath = writeStatisticsPath;
   }
 }
