@@ -5,7 +5,7 @@ applicationName = 'maze'
 mainClassName = 'de.mtneug.maze_cli.Main'
 version = '1.0'
 
-sourceCompatibility = 7
+sourceCompatibility = 8
 
 repositories {
   mavenCentral()
