@@ -9,7 +9,10 @@ import de.mtneug.maze_cli.model.MazeSolutions;
 import de.mtneug.maze_cli.outputs.AbstractMazeOutput;
 import de.mtneug.maze_cli.outputs.SolverOutput;
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
+
+import static org.apache.commons.cli.PatternOptionBuilder.STRING_VALUE;
 
 /**
  * Adapter for the maze solver output.
@@ -30,7 +33,10 @@ public class SolverAdapter extends AbstractMazeOutputCliAdapter {
    */
   @Override
   public AbstractMazeOutput doGenerate(MazeSolutions mazeSolutions, CommandLine commandLine) throws ParseException {
-    return new SolverOutput(mazeSolutions);
+    return new SolverOutput(
+        mazeSolutions,
+        commandLine.getOptionValue("solver-write-statistics-path")
+    );
   }
 
   /**
@@ -42,5 +48,13 @@ public class SolverAdapter extends AbstractMazeOutputCliAdapter {
 
     // Set this options as required so the user is forced to think which solver to use.
     options.getOption("s").setRequired(true);
+
+    options.addOption(Option.builder()
+            .required(true)
+            .longOpt("solver-write-statistics-path")
+            .desc("write statistics to PATH")
+            .hasArg().numberOfArgs(1).argName("PATH").type(STRING_VALUE)
+            .build()
+    );
   }
 }
