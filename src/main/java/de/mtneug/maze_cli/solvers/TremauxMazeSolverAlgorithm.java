@@ -126,13 +126,19 @@ public class TremauxMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
    * @return {@code true} if {@code path} leads to the end cell, {@code false} otherwise.
    */
   private boolean follow(Maze maze, Cell currentCell, Direction currentDirection, SimpleCorrectPath path) {
+    long subSteps = 0;
     currentCell = currentCell.getNeighborPositioned(currentDirection);
     path.addCell(currentCell);
 
     while (true) {
-      if (currentCell.equals(maze.getEndCell()))
+      // count steps
+      subSteps++;
+
+      if (currentCell.equals(maze.getEndCell())) {
         // found end cell
+        steps += subSteps;
         return true;
+      }
 
       // otherwise look how to go from here
       final Set<Direction> directions = currentCell.getLinkedDirections();
@@ -143,6 +149,7 @@ public class TremauxMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
 
         case 1:
           // dead end => not part of the solution
+          steps += 2 * subSteps;
           return false;
 
         case 2:
@@ -157,7 +164,9 @@ public class TremauxMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
 
         default:
           // it is a place
-          return handlePlace(maze, currentCell, currentDirection.getOpposite(), path);
+          final boolean partOfSolution = handlePlace(maze, currentCell, currentDirection.getOpposite(), path);
+          steps += partOfSolution ? subSteps : 2 * subSteps;
+          return partOfSolution;
       }
     }
   }
