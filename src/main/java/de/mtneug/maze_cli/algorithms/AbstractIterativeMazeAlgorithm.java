@@ -21,7 +21,7 @@ public abstract class AbstractIterativeMazeAlgorithm extends AbstractMazeAlgorit
   /**
    * Current number of iterations.
    */
-  private int steps = 0;
+  private long steps = 0;
 
   /**
    * Common constructor of a maze algorithm class.
@@ -70,7 +70,7 @@ public abstract class AbstractIterativeMazeAlgorithm extends AbstractMazeAlgorit
    *
    * @return number of iterations
    */
-  public int getSteps() {
+  public long getSteps() {
     return steps;
   }
 }
