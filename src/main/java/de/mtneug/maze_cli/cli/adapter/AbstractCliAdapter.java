@@ -62,7 +62,7 @@ public abstract class AbstractCliAdapter<T> {
    * @return The parsed CLI arguments.
    * @throws ParseException
    */
-  private CommandLine parseArguments(List<String> args) throws ParseException {
+  private synchronized CommandLine parseArguments(List<String> args) throws ParseException {
     return parser.parse(options, args.toArray(new String[args.size()]));
   }
 

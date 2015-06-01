@@ -44,9 +44,10 @@ public class HelpCommand extends AbstractCliCommand {
   @Override
   public void printUsage() {
     System.out.println(
-        "Usage maze.jar\n" +
+        "Usage maze\n" +
             "\n" +
             "    generate WIDTH:HEIGHT ALGO [ALGO-ARGS...] OUTPUT [OUTPUT-ARGS...]\n" +
+            "    multi-generate TIMES WIDTH:HEIGHT ALGO [ALGO-ARGS...] OUTPUT [OUTPUT-ARGS...]\n" +
             "    help"
     );
   }
