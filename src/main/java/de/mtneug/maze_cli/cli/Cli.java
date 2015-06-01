@@ -60,6 +60,7 @@ public class Cli extends AbstractCliCommand {
       command.printUsage();
     } catch (Exception e) {
       System.err.println(e.getMessage());
+      e.printStackTrace();
     }
 
     System.exit(RETURN_ERROR_CODE);
