@@ -4,7 +4,7 @@
 
 package de.mtneug.maze_cli.outputs;
 
-import de.mtneug.maze_cli.model.Maze;
+import de.mtneug.maze_cli.model.MazeSolutions;
 
 import java.util.concurrent.Callable;
 
@@ -17,25 +17,25 @@ import java.util.concurrent.Callable;
  */
 public abstract class AbstractMazeOutput implements Callable<Object> {
   /**
-   * The maze to output.
+   * The maze and solutions to output.
    */
-  protected final Maze maze;
+  protected final MazeSolutions mazeSolutions;
 
   /**
    * The constructor.
    *
-   * @param maze The maze to output.
+   * @param mazeSolutions The maze and solutions to output.
    */
-  public AbstractMazeOutput(Maze maze) {
-    this.maze = maze;
+  public AbstractMazeOutput(MazeSolutions mazeSolutions) {
+    this.mazeSolutions = mazeSolutions;
   }
 
   /**
-   * Returns the maze to output.
+   * Returns the maze and solutions to output.
    *
-   * @return The maze to output.
+   * @return The maze and solutions to output.
    */
-  public Maze getMaze() {
-    return maze;
+  public MazeSolutions getMazeSolutions() {
+    return mazeSolutions;
   }
 }

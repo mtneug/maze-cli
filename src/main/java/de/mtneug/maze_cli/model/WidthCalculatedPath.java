@@ -7,7 +7,7 @@ package de.mtneug.maze_cli.model;
 import de.mtneug.maze_cli.util.Graphics;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +23,7 @@ public class WidthCalculatedPath extends SimpleCalculatedPath {
   /**
    * The set of all cell part of the path.
    */
-  protected final Set<Cell> area = new HashSet<>();
+  protected final Set<Cell> area = new LinkedHashSet<>();
 
   /**
    * The width of the path.
@@ -121,5 +121,15 @@ public class WidthCalculatedPath extends SimpleCalculatedPath {
   @Override
   public boolean isEmpty() {
     return area.isEmpty();
+  }
+
+  /**
+   * Returns a string representation of this object.
+   *
+   * @return A string representation.
+   */
+  @Override
+  public String toString() {
+    return area.toString();
   }
 }

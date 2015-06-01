@@ -5,7 +5,7 @@
 package de.mtneug.maze_cli.cli.commands;
 
 import de.mtneug.maze_cli.algorithms.AbstractMazeAlgorithm;
-import de.mtneug.maze_cli.annotations.Command;
+import de.mtneug.maze_cli.annotations.CliCommand;
 import de.mtneug.maze_cli.cli.adapter.MazeAlgorithmCliAdapterRegistry;
 import de.mtneug.maze_cli.cli.adapter.MazeOutputCliAdapterRegistry;
 import de.mtneug.maze_cli.cli.adapter.algorithms.AbstractMazeAlgorithmCliAdapter;
@@ -25,7 +25,7 @@ import java.util.List;
  * @version 1.0
  * @since 1.0
  */
-@Command(name = "generate")
+@CliCommand(name = "generate")
 public class GenerateCommand extends AbstractCliCommand {
   /**
    * Index of the dimension argument.

@@ -4,11 +4,11 @@
 
 package de.mtneug.maze_cli.cli.adapter;
 
-import de.mtneug.maze_cli.annotations.Output;
+import de.mtneug.maze_cli.annotations.OutputAdapter;
 import de.mtneug.maze_cli.cli.adapter.outputs.AbstractMazeOutputCliAdapter;
 import de.mtneug.maze_cli.util.AnnotationHelper;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -28,7 +28,7 @@ public class MazeOutputCliAdapterRegistry {
   /**
    * Map of adapter names to adapter instances.
    */
-  private final Map<String, AbstractMazeOutputCliAdapter> adapter = new HashMap<>();
+  private final Map<String, AbstractMazeOutputCliAdapter> adapter = new LinkedHashMap<>();
 
   /**
    * Private singleton constructor. It start an initial search.
@@ -53,7 +53,7 @@ public class MazeOutputCliAdapterRegistry {
     adapter.clear();
 
     try {
-      adapter.putAll(AnnotationHelper.searchAndInstantiate(Output.class, "name", String.class, AbstractMazeOutputCliAdapter.class));
+      adapter.putAll(AnnotationHelper.searchAndInstantiate(OutputAdapter.class, "name", String.class, AbstractMazeOutputCliAdapter.class));
     } catch (Exception e) {
       // Ignore errors
     }

@@ -8,7 +8,7 @@ import de.mtneug.maze_cli.model.Cell;
 import de.mtneug.maze_cli.model.Direction;
 import de.mtneug.maze_cli.model.Wall;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class Prim extends AbstractIterativeMazeAlgorithm {
   /**
    * The set of walls i.e. cell and associated direction, which still needs to be looked at.
    */
-  private final Set<Wall> wallSet = new HashSet<>();
+  private final Set<Wall> wallSet = new LinkedHashSet<>();
 
   /**
    * The constructor.

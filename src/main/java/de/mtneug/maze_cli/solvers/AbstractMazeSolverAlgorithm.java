@@ -19,6 +19,11 @@ import de.mtneug.maze_cli.model.MazeSolverAlgorithm;
 public abstract class AbstractMazeSolverAlgorithm extends AbstractAlgorithm<MazeSolutions>
     implements MazeSolverAlgorithm {
   /**
+   * The number of steps needed for solving the maze.
+   */
+  protected long steps = 0;
+
+  /**
    * The constructor.
    *
    * @param maze The maze to solve.
@@ -33,5 +38,15 @@ public abstract class AbstractMazeSolverAlgorithm extends AbstractAlgorithm<Maze
   @Override
   protected void running() {
     this.output.solve();
+  }
+
+  /**
+   * Returns the number of steps needed to solve the maze.
+   *
+   * @return The number of steps needed to solve the maze.
+   */
+  @Override
+  public long getSteps() {
+    return steps;
   }
 }

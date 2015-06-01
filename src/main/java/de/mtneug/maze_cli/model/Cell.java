@@ -23,17 +23,17 @@ public class Cell {
   /**
    * Set of the directions one can go to from this cell.
    */
-  private final Set<Direction> links = new HashSet<>();
+  private final Set<Direction> links = new LinkedHashSet<>();
 
   /**
    * Set of labels given to this cell.
    */
-  private final Set<String> labels = new HashSet<>();
+  private final Set<String> labels = new LinkedHashSet<>();
 
   /**
    * Map of neighbor cells and the direction they lie in.
    */
-  private final Map<Direction, Cell> neighbors = new HashMap<>();
+  private final Map<Direction, Cell> neighbors = new LinkedHashMap<>();
 
   /**
    * The constructor.
@@ -174,6 +174,35 @@ public class Cell {
   }
 
   /**
+   * Returns a read only set of all directions to linked cells.
+   *
+   * @return The set of all directions to linked cells.
+   */
+  public Set<Direction> getLinkedDirections() {
+    return Collections.unmodifiableSet(links);
+  }
+
+  /**
+   * Returns whether the given {@code cell} is a neighbor of this one.
+   *
+   * @param cell The other cell.
+   * @return {@code true} if {@code cell} is a neighbor, {@code false} otherwise.
+   */
+  public boolean isNeighborOf(Cell cell) {
+    return getNeighbors().containsValue(cell);
+  }
+
+  /**
+   * Returns whether the given {@code cell} is not a neighbor of this one.
+   *
+   * @param cell The other cell.
+   * @return {@code true} if {@code cell} is not a neighbor, {@code false} otherwise.
+   */
+  public boolean isNotNeighborOf(Cell cell) {
+    return !isNeighborOf(cell);
+  }
+
+  /**
    * Returns if the given object is equal to this one.
    *
    * @param o The other object.
@@ -192,5 +221,23 @@ public class Cell {
     return !(neighbors != null ? !neighbors.equals(cell.neighbors) : cell.neighbors != null);
   }
 
-  // TODO: hashCode
+  /**
+   * Returns the hash code value for this object.
+   *
+   * @return The hash code value for this object.
+   */
+  @Override
+  public int hashCode() {
+    return position.hashCode();
+  }
+
+  /**
+   * Returns a string representation of this object.
+   *
+   * @return A string representation.
+   */
+  @Override
+  public String toString() {
+    return "Cell" + position.toString();
+  }
 }

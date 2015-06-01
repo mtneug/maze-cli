@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for maze output adapter for automatic wire up.
+ * Annotation for maze generation algorithm adapter for automatic wire up.
  *
  * @author Matthias Neugebauer
  * @version 1.0
@@ -18,6 +18,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface Output {
+public @interface AlgorithmAdapter {
   String name();
 }

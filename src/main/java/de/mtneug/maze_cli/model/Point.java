@@ -34,6 +34,18 @@ public class Point {
   }
 
   /**
+   * Returns the hash code value for this object.
+   *
+   * @return The hash code value for this object.
+   */
+  @Override
+  public int hashCode() {
+    int result = x;
+    result = 31 * result + y;
+    return result;
+  }
+
+  /**
    * Returns if the given object is equal to this one.
    *
    * @param o The other object.
@@ -56,6 +68,6 @@ public class Point {
    */
   @Override
   public String toString() {
-    return "Point(" + x + ", " + y + ')';
+    return "(" + x + ", " + y + ')';
   }
 }

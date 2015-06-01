@@ -5,7 +5,7 @@
 package de.mtneug.maze_cli.outputs;
 
 import de.erichseifert.vectorgraphics2d.EPSGraphics2D;
-import de.mtneug.maze_cli.model.Maze;
+import de.mtneug.maze_cli.model.MazeSolutions;
 
 import java.io.FileOutputStream;
 
@@ -25,11 +25,11 @@ public class EpsOutput extends AbstractGraphicOutput {
   /**
    * The constructor.
    *
-   * @param maze The maze to output.
-   * @param path The path to use for writing the EPS file.
+   * @param mazeSolutions The maze and solutions to output.
+   * @param path          The path to use for writing the EPS file.
    */
-  public EpsOutput(Maze maze, String path) {
-    super(maze);
+  public EpsOutput(MazeSolutions mazeSolutions, String path) {
+    super(mazeSolutions);
 
     if (path == null)
       throw new IllegalArgumentException("No path is specified");

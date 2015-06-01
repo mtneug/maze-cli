@@ -61,6 +61,7 @@ public class MazeSolutions {
   public void solve() {
     if (solved) return;
     mazeSolver.solve(maze, solutions);
+    solved = true;
   }
 
   /**

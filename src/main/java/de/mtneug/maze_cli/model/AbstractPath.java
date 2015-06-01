@@ -63,4 +63,14 @@ public abstract class AbstractPath {
   public boolean isEmpty() {
     return path.isEmpty();
   }
+
+  /**
+   * Returns a string representation of this object.
+   *
+   * @return A string representation.
+   */
+  @Override
+  public String toString() {
+    return path.toString();
+  }
 }

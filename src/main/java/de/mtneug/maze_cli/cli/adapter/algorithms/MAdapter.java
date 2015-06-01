@@ -6,7 +6,7 @@ package de.mtneug.maze_cli.cli.adapter.algorithms;
 
 import de.mtneug.maze_cli.algorithms.AbstractMazeAlgorithm;
 import de.mtneug.maze_cli.algorithms.M;
-import de.mtneug.maze_cli.annotations.Algorithm;
+import de.mtneug.maze_cli.annotations.AlgorithmAdapter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
@@ -20,7 +20,7 @@ import static org.apache.commons.cli.PatternOptionBuilder.NUMBER_VALUE;
  * @version 1.0
  * @since 1.0
  */
-@Algorithm(name = "m")
+@AlgorithmAdapter(name = "m")
 public class MAdapter extends AbstractMazeAlgorithmCliAdapter {
   /**
    * Code to instantiate a new M maze generation algorithm configured with the given options.

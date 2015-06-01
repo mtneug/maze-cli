@@ -27,26 +27,31 @@ public class SimpleCorrectPath extends AbstractPath {
    * Goes to the given {@code direction} and add that cell to the end of the path.
    *
    * @param direction The direction to go to.
+   * @return The added cell.
    * @throws CannotGoInThatDirectionException if there is a wall in that direction.
    */
-  public void goAndAdd(Direction direction) {
-    if (isEmpty() || lastCell().cannotGoTo(direction))
+  public Cell goAndAdd(Direction direction) {
+    if (isEmpty() && getLastCell().cannotGoTo(direction))
       throw new CannotGoInThatDirectionException();
 
-    path.add(lastCell().getNeighborPositioned(direction));
+    Cell cell = getLastCell().getNeighborPositioned(direction);
+    path.add(cell);
+    return cell;
   }
 
   /**
    * Add {@code cell} to the end of the path, if it is a neighbor of the last cell.
    *
    * @param cell The cell to add.
+   * @return The added cell.
    * @throws IllegalArgumentException if the cell is not a neighbor of the last cell
    */
-  public void addCell(Cell cell) {
-    if (!lastCell().getNeighbors().containsValue(cell))
+  public Cell addCell(Cell cell) {
+    if (!isEmpty() && cell.isNotNeighborOf(getLastCell()))
       throw new IllegalArgumentException("cell is not a neighbor of the last cell");
 
     path.add(cell);
+    return cell;
   }
 
   /**
@@ -55,7 +60,7 @@ public class SimpleCorrectPath extends AbstractPath {
    * @return The first cell of the path.
    * @throws IndexOutOfBoundsException if the path is empty.
    */
-  public Cell firstCell() {
+  public Cell getFirstCell() {
     return path.get(0);
   }
 
@@ -65,7 +70,20 @@ public class SimpleCorrectPath extends AbstractPath {
    * @return The last cell of the path.
    * @throws IndexOutOfBoundsException if the path is empty.
    */
-  public Cell lastCell() {
+  public Cell getLastCell() {
     return path.get(path.size() - 1);
+  }
+
+  /**
+   * Merges two paths, where {@code otherPath} continues this one.
+   *
+   * @param otherPath The continuation path of this one.
+   * @throws IllegalArgumentException if the other path does not continue this path
+   */
+  public void merge(SimpleCorrectPath otherPath) {
+    if (!isEmpty() & !otherPath.isEmpty() && !getLastCell().isNeighborOf(otherPath.getFirstCell()))
+      throw new IllegalArgumentException("otherPath does not continue this path");
+
+    path.addAll(otherPath.path);
   }
 }

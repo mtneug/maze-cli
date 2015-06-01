@@ -9,7 +9,7 @@ import org.reflections.Reflections;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -46,7 +46,7 @@ public final class AnnotationHelper {
    * @throws InvocationTargetException
    */
   public static <A extends Annotation, T, F> Map<F, T> searchAndInstantiate(Class<A> annotationClass, String field, Class<F> fieldClass, Class<T> annotatedBaseClass) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-    final Map<F, T> map = new HashMap<>();
+    final Map<F, T> map = new LinkedHashMap<>();
     final Reflections reflections = new Reflections("");
     final Method fieldMethod = annotationClass.getMethod(field);
 
@@ -79,7 +79,7 @@ public final class AnnotationHelper {
    */
   @SuppressWarnings("unchecked")
   public static <A extends Annotation, T, F> Map<F, Class<? extends T>> search(Class<A> annotationClass, String field, Class<F> fieldClass, Class<T> annotatedBaseClass) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-    final Map<F, Class<? extends T>> map = new HashMap<>();
+    final Map<F, Class<? extends T>> map = new LinkedHashMap<>();
     final Reflections reflections = new Reflections("");
     final Method fieldMethod = annotationClass.getMethod(field);
 

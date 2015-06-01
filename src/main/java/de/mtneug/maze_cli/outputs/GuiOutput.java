@@ -7,6 +7,7 @@ package de.mtneug.maze_cli.outputs;
 import de.mtneug.maze_cli.graphics.FixAspectRatioComponentAdapter;
 import de.mtneug.maze_cli.graphics.MazePanel;
 import de.mtneug.maze_cli.model.Maze;
+import de.mtneug.maze_cli.model.MazeSolutions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,10 +23,10 @@ public class GuiOutput extends AbstractMazeOutput {
   /**
    * The constructor.
    *
-   * @param maze The maze to output.
+   * @param mazeSolutions The maze and solutions to output.
    */
-  public GuiOutput(Maze maze) {
-    super(maze);
+  public GuiOutput(MazeSolutions mazeSolutions) {
+    super(mazeSolutions);
   }
 
   /**
@@ -38,11 +39,19 @@ public class GuiOutput extends AbstractMazeOutput {
     JFrame frame = new JFrame("Maze");
 
     // force the aspect ratio of the maze
-    frame.addComponentListener(new FixAspectRatioComponentAdapter((double) maze.getWidth() / (double) maze.getHeight()));
+    frame.addComponentListener(new FixAspectRatioComponentAdapter(
+        (double) mazeSolutions.getMaze().getWidth() / (double) mazeSolutions.getMaze().getHeight())
+    );
 
-    // add a maze panel
+    // create maze panel
+    // TODO: make panel more like AbstractGraphicOutput
+    MazePanel mazePanel = new MazePanel(mazeSolutions.getMaze());
+    if (mazeSolutions.hasSolution())
+      mazePanel.addAdditionallyMarkedCells(mazeSolutions.getSolutions().get(0).getPathCells());
+
+    // add the maze panel to the frame
     frame.setLayout(new BorderLayout());
-    frame.add(new MazePanel(maze), BorderLayout.CENTER);
+    frame.add(mazePanel, BorderLayout.CENTER);
     frame.pack();
 
     // center window on the screen

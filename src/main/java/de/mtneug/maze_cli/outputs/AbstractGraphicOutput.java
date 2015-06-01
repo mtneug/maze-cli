@@ -6,7 +6,7 @@ package de.mtneug.maze_cli.outputs;
 
 import de.mtneug.maze_cli.model.Cell;
 import de.mtneug.maze_cli.model.Direction;
-import de.mtneug.maze_cli.model.Maze;
+import de.mtneug.maze_cli.model.MazeSolutions;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -31,7 +31,7 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
   private final float height;
 
   /**
-   * The prefered length of the walls. The actual length depends on the actual size of the component.
+   * The preferred length of the walls. The actual length depends on the actual size of the component.
    */
   private float preferredWallLength = 50.0f;
 
@@ -56,6 +56,11 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
   private Color endCellSurfaceColor = new Color(169, 40, 57);
 
   /**
+   * The background color of the end cell.
+   */
+  private Color firstSolutionSurfaceColor = new Color(94, 169, 73);
+
+  /**
    * Whether to mark the start cell with the start cell background color.
    */
   private boolean markingStartCell = true;
@@ -66,15 +71,20 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
   private boolean markingEndCell = true;
 
   /**
+   * Whether to mark the first solution.
+   */
+  private boolean markingFirstSolution = true;
+
+  /**
    * The constructor.
    *
-   * @param maze The maze to output.
+   * @param mazeSolutions The maze and solutions to output.
    */
-  public AbstractGraphicOutput(Maze maze) {
-    super(maze);
+  public AbstractGraphicOutput(MazeSolutions mazeSolutions) {
+    super(mazeSolutions);
 
-    this.width = maze.getWidth() * preferredWallLength + getXWallThickness();
-    this.height = maze.getHeight() * preferredWallLength + getYWallThickness();
+    this.width = mazeSolutions.getMaze().getWidth() * preferredWallLength + getXWallThickness();
+    this.height = mazeSolutions.getMaze().getHeight() * preferredWallLength + getYWallThickness();
   }
 
   /**
@@ -83,21 +93,28 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
    * @param g2 The graphic object.
    */
   protected void paintComponent(Graphics2D g2) {
+    // draw first solution
+    if (mazeSolutions.hasSolution())
+      for (Cell cell : mazeSolutions.getSolutions().get(0).getPathCells()) {
+        g2.setColor(firstSolutionSurfaceColor);
+        drawCellSurface(g2, cell);
+      }
+
     // draw start cell background
-    if (markingStartCell && maze.hasStartCell()) {
+    if (markingStartCell && mazeSolutions.getMaze().hasStartCell()) {
       g2.setColor(startCellSurfaceColor);
-      drawCellSurface(g2, maze.getStartCell());
+      drawCellSurface(g2, mazeSolutions.getMaze().getStartCell());
     }
 
     // draw end cell background
-    if (markingEndCell && maze.hasEndCell()) {
+    if (markingEndCell && mazeSolutions.getMaze().hasEndCell()) {
       g2.setColor(endCellSurfaceColor);
-      drawCellSurface(g2, maze.getEndCell());
+      drawCellSurface(g2, mazeSolutions.getMaze().getEndCell());
     }
 
     // draw cell walls
     g2.setColor(wallColor);
-    for (Cell cell : maze)
+    for (Cell cell : mazeSolutions.getMaze())
       drawCellWalls(g2, cell);
   }
 
@@ -159,8 +176,6 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
           getXWallThickness() / 2 + cell.getPosition().x * getXWallLength(),
           getYWallThickness() + cell.getPosition().y * getYWallLength() + getYWallLength()
       ));
-
-    // TODO: --file=/Users/mtneug/Desktop/pdf-test-maze.pdf
   }
 
   /**
@@ -169,7 +184,7 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
    * @return The length of a wall in x direction.
    */
   public float getXWallLength() {
-    return getWidth() / (maze.getWidth() + preferredWallThicknessFactor);
+    return getWidth() / (mazeSolutions.getMaze().getWidth() + preferredWallThicknessFactor);
   }
 
   /**
@@ -178,7 +193,7 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
    * @return The length of a wall in y direction.
    */
   public float getYWallLength() {
-    return getHeight() / (maze.getHeight() + preferredWallThicknessFactor);
+    return getHeight() / (mazeSolutions.getMaze().getHeight() + preferredWallThicknessFactor);
   }
 
   /**
@@ -263,7 +278,7 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
   }
 
   /**
-   * Returns the background color of the start cell.
+   * Sets the background color of the start cell.
    *
    * @param startCellSurfaceColor The new background color of the start cell.
    */
@@ -281,12 +296,30 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
   }
 
   /**
-   * Returns the background color of the end cell.
+   * Sets the background color of the end cell.
    *
    * @param endCellSurfaceColor The new background color of the end cell.
    */
   public void setEndCellSurfaceColor(Color endCellSurfaceColor) {
     this.endCellSurfaceColor = endCellSurfaceColor;
+  }
+
+  /**
+   * Returns the background color of the first solution.
+   *
+   * @return The background color of the first solution.
+   */
+  public Color getFirstSolutionSurfaceColor() {
+    return firstSolutionSurfaceColor;
+  }
+
+  /**
+   * Sets the background color of the first solution.
+   *
+   * @param firstSolutionSurfaceColor The new background color of the first solution.
+   */
+  public void setFirstSolutionSurfaceColor(Color firstSolutionSurfaceColor) {
+    this.firstSolutionSurfaceColor = firstSolutionSurfaceColor;
   }
 
   /**
@@ -323,6 +356,24 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
    */
   public void setMarkingEndCell(boolean markingEndCell) {
     this.markingEndCell = markingEndCell;
+  }
+
+  /**
+   * Returns whether the first solution is marked.
+   *
+   * @return {@code true} if the first solution is marked, {@code false} otherwise.
+   */
+  public boolean isMarkingFirstSolution() {
+    return markingFirstSolution;
+  }
+
+  /**
+   * Sets whether the first solution is marked.
+   *
+   * @param markingFirstSolution Whether to mark the first solution.
+   */
+  public void setMarkingFirstSolution(boolean markingFirstSolution) {
+    this.markingFirstSolution = markingFirstSolution;
   }
 
   /**

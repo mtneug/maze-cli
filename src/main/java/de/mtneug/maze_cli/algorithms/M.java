@@ -66,7 +66,7 @@ public class M extends AbstractMazeAlgorithm {
   /**
    * The set of all passable cells. The non passable cells are the difference between all cells and the passable cells.
    */
-  private final Set<Cell> passableCellSet = new HashSet<>();
+  private final Set<Cell> passableCellSet = new LinkedHashSet<>();
 
   /**
    * Whether to print out statistics about the generated maze.
@@ -243,8 +243,8 @@ public class M extends AbstractMazeAlgorithm {
    * @param initialCell The starting point.
    */
   private void primOnCellSet(Set<Cell> cellSet, Cell initialCell) {
-    final Set<Cell> notSeenCellSet = new HashSet<>(cellSet);
-    final Set<Wall> wallSet = new HashSet<>();
+    final Set<Cell> notSeenCellSet = new LinkedHashSet<>(cellSet);
+    final Set<Wall> wallSet = new LinkedHashSet<>();
 
     // Save all relevant walls of the initial cell
     saveWalls(initialCell, cellSet, notSeenCellSet, wallSet);
@@ -336,7 +336,7 @@ public class M extends AbstractMazeAlgorithm {
    * @return The non passable cell set.
    */
   public Set<Cell> getNonPassableCells() {
-    return Sets.difference(new HashSet<Cell>(output.getCells()), passableCellSet);
+    return Sets.difference(new LinkedHashSet<Cell>(output.getCells()), passableCellSet);
   }
 
   /**

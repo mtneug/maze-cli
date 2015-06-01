@@ -4,7 +4,7 @@
 
 package de.mtneug.maze_cli.cli.commands;
 
-import de.mtneug.maze_cli.annotations.Command;
+import de.mtneug.maze_cli.annotations.CliCommand;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * @version 1.0
  * @since 1.0
  */
-@Command(name = "help")
+@CliCommand(name = "help")
 public class HelpCommand extends AbstractCliCommand {
   /**
    * The constructor.

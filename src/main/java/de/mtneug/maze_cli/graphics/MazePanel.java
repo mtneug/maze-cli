@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Panel, which draws the given maze onto it's surface.
@@ -27,7 +29,13 @@ public class MazePanel extends JPanel {
   private final Maze maze;
 
   /**
-   * The prefered length of the walls. The actual length depends on the actual size of the component.
+   * TODO: change with maze solution object
+   * List of cells, which should be marked
+   */
+  private final java.util.List<Cell> additionallyMarkedCells;
+
+  /**
+   * The preferred length of the walls. The actual length depends on the actual size of the component.
    */
   private float preferredWallLength = 15.0f;
 
@@ -52,6 +60,11 @@ public class MazePanel extends JPanel {
   private Color endCellSurfaceColor = new Color(169, 40, 57);
 
   /**
+   * TODO: change with maze solution object.
+   */
+  private Color additionallyMarkedCellsColor = new Color(217, 200, 176);
+
+  /**
    * Whether to mark the start cell with the start cell background color.
    */
   private boolean markingStartCell = true;
@@ -67,10 +80,27 @@ public class MazePanel extends JPanel {
    * @param maze The maze to draw.
    */
   public MazePanel(Maze maze) {
-    if (maze == null)
+    this(maze, new ArrayList<Cell>());
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param maze The maze to draw.
+   */
+  public MazePanel(Maze maze, java.util.List<Cell> additionallyMarkedCells) {
+    if (maze == null || additionallyMarkedCells == null)
       throw new IllegalArgumentException();
 
     this.maze = maze;
+    this.additionallyMarkedCells = additionallyMarkedCells;
+  }
+
+  /**
+   * TODO: change with maze solution object.
+   */
+  public boolean addAdditionallyMarkedCells(Collection<? extends Cell> c) {
+    return additionallyMarkedCells.addAll(c);
   }
 
   /**
@@ -95,6 +125,14 @@ public class MazePanel extends JPanel {
     super.paintComponent(g);
 
     Graphics2D g2 = (Graphics2D) g;
+
+    // TODO: change with maze solution object
+    // draw additionally marked cells background
+    if (!additionallyMarkedCells.isEmpty())
+      for (Cell cell : additionallyMarkedCells) {
+        g2.setColor(additionallyMarkedCellsColor);
+        drawCellSurface(g2, cell);
+      }
 
     // draw start cell background
     if (markingStartCell && maze.hasStartCell()) {

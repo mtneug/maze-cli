@@ -6,7 +6,7 @@ package de.mtneug.maze_cli.cli.adapter.algorithms;
 
 import de.mtneug.maze_cli.algorithms.AbstractMazeAlgorithm;
 import de.mtneug.maze_cli.algorithms.Prim;
-import de.mtneug.maze_cli.annotations.Algorithm;
+import de.mtneug.maze_cli.annotations.AlgorithmAdapter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 
@@ -15,7 +15,7 @@ import org.apache.commons.cli.ParseException;
  * @version 1.0
  * @since 1.0
  */
-@Algorithm(name = "prim")
+@AlgorithmAdapter(name = "prim")
 public class PrimAdapter extends AbstractMazeAlgorithmCliAdapter {
   /**
    * Code to instantiate a new Prim maze generation algorithm configured with the given options.

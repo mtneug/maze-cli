@@ -5,7 +5,7 @@
 package de.mtneug.maze_cli.outputs;
 
 import de.erichseifert.vectorgraphics2d.SVGGraphics2D;
-import de.mtneug.maze_cli.model.Maze;
+import de.mtneug.maze_cli.model.MazeSolutions;
 
 import java.io.FileOutputStream;
 
@@ -25,11 +25,11 @@ public class SvgOutput extends AbstractGraphicOutput {
   /**
    * The constructor.
    *
-   * @param maze The maze to output.
-   * @param path The path to use for writing the SVG file.
+   * @param mazeSolutions The maze and solutions to output.
+   * @param path          The path to use for writing the SVG file.
    */
-  public SvgOutput(Maze maze, String path) {
-    super(maze);
+  public SvgOutput(MazeSolutions mazeSolutions, String path) {
+    super(mazeSolutions);
 
     if (path == null)
       throw new IllegalArgumentException("No path is specified");
