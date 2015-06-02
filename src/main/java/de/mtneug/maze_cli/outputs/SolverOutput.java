@@ -46,6 +46,15 @@ public class SolverOutput extends AbstractMazeOutput {
    */
   @Override
   public Object call() throws Exception {
+    String solutionsLenght = "";
+
+    for (int i = 0; i < mazeSolutions.getSolutions().size(); i++) {
+      if (i == 0)
+        solutionsLenght += mazeSolutions.getSolutions().get(i).getPathCells().size();
+      else
+        solutionsLenght += ";" + mazeSolutions.getSolutions().get(i).getPathCells().size();
+    }
+
     String text = "" +
         // identifier
         mazeSolutions.getMaze().hashCode() + "," +
@@ -57,11 +66,12 @@ public class SolverOutput extends AbstractMazeOutput {
         // number of all cells
         mazeSolutions.getMaze().getWidth() * mazeSolutions.getMaze().getHeight() + "," +
 
-        // number of solutions
-        mazeSolutions.getSolutions().size() + "," +
-
         // solver statistics
-        mazeSolutions.getMazeSolver().getSteps();
+        mazeSolutions.getMazeSolver().getSteps() + "," +
+
+        // number and length of solutions
+        mazeSolutions.getSolutions().size() + "," +
+        solutionsLenght;
 
     // TODO: how to lower the synchronization if write happens to different files?
     synchronized (LOCK) {
