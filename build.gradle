@@ -78,7 +78,7 @@ task generateStatistics(dependsOn: [classes, createStatisticsDataDir]) {
 
 task analyseStatistics(type: Exec, dependsOn: [generateStatistics]) {
   executable 'Rscript'
-  args project.buildDir + '/scripts/analyse_m_tremaux.R'
+  args project.buildDir.toString() + '/scripts/analyse_m_tremaux.R'
 }
 
 dependencies {
