@@ -16,7 +16,7 @@ import java.util.List;
  * @see MazeSolutions
  * @since 1.0
  */
-public interface MazeSolverAlgorithm {
+public interface MazeSolverAlgorithm extends CsvStatisticable {
   /**
    * Code to solve the given {@code maze}. The solutions are essentially a list of {@link SimpleCorrectPath} objects and
    * should be added to {@code solutions}.

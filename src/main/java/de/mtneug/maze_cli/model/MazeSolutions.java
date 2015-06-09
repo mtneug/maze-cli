@@ -18,7 +18,7 @@ import java.util.List;
  * @see MazeSolverAlgorithm
  * @since 1.0
  */
-public class MazeSolutions {
+public class MazeSolutions implements CsvStatisticable {
   /**
    * List of paths from the start cell to the end cell, i.e. solutions of the maze.
    */
@@ -121,5 +121,24 @@ public class MazeSolutions {
   protected void throwExceptionIfNotSolved() {
     if (!solved)
       throw new MazeNotYetSolvedException();
+  }
+
+  /**
+   * Returns statistics about this object in a CSV formatted string.
+   *
+   * @return A CSV formatted string.
+   */
+  @Override
+  public String getStatistics() {
+    String solutionLengths = "";
+
+    for (int i = 0; i < solutions.size(); i++)
+      if (i == 0)
+        solutionLengths += solutions.get(i).getPathCells().size();
+      else
+        solutionLengths += ";" + solutions.get(i).getPathCells().size();
+
+    // number and length of solutions
+    return solutions.size() + "," + solutionLengths;
   }
 }

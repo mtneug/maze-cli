@@ -11,6 +11,7 @@ import de.mtneug.maze_cli.model.MazeSolutions;
 import de.mtneug.maze_cli.outputs.AbstractMazeOutput;
 import de.mtneug.maze_cli.solvers.AbstractMazeSolverAlgorithm;
 import de.mtneug.maze_cli.solvers.MazeSolverClassRegistry;
+import de.mtneug.maze_cli.solvers.NoneMazeSolverAlgorithm;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
@@ -27,11 +28,6 @@ import static org.apache.commons.cli.PatternOptionBuilder.STRING_VALUE;
  * @since 1.0
  */
 public abstract class AbstractMazeOutputCliAdapter extends AbstractCliAdapter<AbstractMazeOutput> {
-  /**
-   * The name of the default solver.
-   */
-  public static final String DEFAULT_SOLVER_NAME = "none";
-
   /**
    * Code to instantiate a new maze output configured with the given parameters.
    *
@@ -66,7 +62,7 @@ public abstract class AbstractMazeOutputCliAdapter extends AbstractCliAdapter<Ab
    * @return The maze solutions object.
    */
   protected MazeSolutions createMazeSolutions(Maze maze, CommandLine commandLine) {
-    String solverName = DEFAULT_SOLVER_NAME;
+    String solverName = NoneMazeSolverAlgorithm.NAME;
 
     if (commandLine.hasOption("solver-name"))
       solverName = commandLine.getOptionValue("solver-name");
@@ -75,12 +71,12 @@ public abstract class AbstractMazeOutputCliAdapter extends AbstractCliAdapter<Ab
       return doCreateMazeSolutions(maze, solverName);
     } catch (Exception e) {
       System.err.println("solver returned with an error");
-      System.err.println("trying again with the " + DEFAULT_SOLVER_NAME + " solver");
+      System.err.println("trying again with the " + NoneMazeSolverAlgorithm.NAME + " solver");
       System.err.println(e.getMessage());
       e.printStackTrace();
 
       try {
-        return doCreateMazeSolutions(maze, DEFAULT_SOLVER_NAME);
+        return doCreateMazeSolutions(maze, NoneMazeSolverAlgorithm.NAME);
       } catch (Exception e1) {
         // the none solver throws no exceptions
         throw new IllegalStateException("solver returned again with an error");

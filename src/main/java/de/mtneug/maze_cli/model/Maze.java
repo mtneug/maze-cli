@@ -4,6 +4,8 @@
 
 package de.mtneug.maze_cli.model;
 
+import de.mtneug.maze_cli.algorithms.AbstractMazeAlgorithm;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -18,7 +20,7 @@ import static de.mtneug.maze_cli.model.Direction.*;
  * @version 1.0
  * @since 1.0
  */
-public class Maze implements Iterable<Cell> {
+public class Maze implements Iterable<Cell>, CsvStatisticable {
   /**
    * The width of the maze.
    */
@@ -45,15 +47,22 @@ public class Maze implements Iterable<Cell> {
   private Point endPoint;
 
   /**
+   * The maze generation algorithm used to create this maze.
+   */
+  private AbstractMazeAlgorithm mazeAlgorithm;
+
+  /**
    * The constructor.
    *
-   * @param width  The width of the maze.
-   * @param height The height of the maze.
+   * @param width         The width of the maze.
+   * @param height        The height of the maze.
+   * @param mazeAlgorithm The maze generation algorithm which will be used to form this maze.
    */
-  public Maze(int width, int height) {
+  public Maze(int width, int height, AbstractMazeAlgorithm mazeAlgorithm) {
     if (width < 2 || height < 2)
       throw new IllegalArgumentException("Dimension must be at least 2x2");
 
+    this.mazeAlgorithm = mazeAlgorithm;
     this.width = width;
     this.height = height;
 
@@ -237,5 +246,30 @@ public class Maze implements Iterable<Cell> {
   @Override
   public Iterator<Cell> iterator() {
     return new MazeCellIterator(this);
+  }
+
+  /**
+   * Returns statistics about this object in a CSV formatted string.
+   *
+   * @return A CSV formatted string.
+   */
+  @Override
+  public String getStatistics() {
+    return "" +
+        // dimensions
+        width + "," +
+        height + "," +
+
+        // number of all cells
+        width * height;
+  }
+
+  /**
+   * Returns the maze generation algorithm used to create this maze.
+   *
+   * @return The maze generation algorithm used to create this maze.
+   */
+  public AbstractMazeAlgorithm getMazeAlgorithm() {
+    return mazeAlgorithm;
   }
 }

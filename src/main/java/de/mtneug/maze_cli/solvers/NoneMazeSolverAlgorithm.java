@@ -18,6 +18,11 @@ import java.util.List;
 @Solver(name = "none")
 public class NoneMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
   /**
+   * Name of the algorithm.
+   */
+  public final static String NAME = "none";
+
+  /**
    * The constructor.
    *
    * @param maze The maze to solve.
@@ -34,5 +39,15 @@ public class NoneMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
    */
   @Override
   public void solve(Maze maze, List<SimpleCorrectPath> solutions) {
+  }
+
+  /**
+   * Returns the name of the object.
+   *
+   * @return The name of the object.
+   */
+  @Override
+  public String getName() {
+    return NAME;
   }
 }

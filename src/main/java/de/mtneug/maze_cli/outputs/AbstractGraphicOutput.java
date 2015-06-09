@@ -58,7 +58,7 @@ public abstract class AbstractGraphicOutput extends AbstractMazeOutput {
   /**
    * The background color of the end cell.
    */
-  private Color firstSolutionSurfaceColor = new Color(94, 169, 73);
+  private Color firstSolutionSurfaceColor = new Color(217, 200, 176);
 
   /**
    * Whether to mark the start cell with the start cell background color.

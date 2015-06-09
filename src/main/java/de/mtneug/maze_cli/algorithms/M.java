@@ -7,9 +7,7 @@ package de.mtneug.maze_cli.algorithms;
 import com.google.common.collect.Sets;
 import de.mtneug.maze_cli.model.*;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
 
 import static de.mtneug.maze_cli.model.DifficultyLevel.HARD;
@@ -36,12 +34,11 @@ import static de.mtneug.maze_cli.model.Orientation.VERTICAL;
  * @since 1.0
  */
 public class M extends AbstractMazeAlgorithm {
-  // TODO: tweak
   /**
    * The percentage of the shorter side the width of the path can be at maximum. This only applies up to a difficulty of
    * 99 since at 100 all cells are declared passable.
    */
-  public final static double SHORTER_SIDE_PERCENTAGE = 1.5;
+  public final static double SHORTER_SIDE_PERCENTAGE = 1;
 
   /**
    * Cell distance between the initial segments of the path between the start and end cell. This also determines the
@@ -54,7 +51,7 @@ public class M extends AbstractMazeAlgorithm {
    * The percentage of the {@link #DASH_DISTANCE} defining the area a point of the path can be changed along the bigger
    * side of the maze (only applicable if the difficulty level is HARD).
    */
-  public final static int DASH_DISTANCE_DELTA_FACTOR = 2;
+  public final static int DASH_DISTANCE_DELTA_FACTOR = 1;
 
   /**
    * The maximum difficulty.
@@ -62,14 +59,14 @@ public class M extends AbstractMazeAlgorithm {
   public final static int MAXIMUM_DIFFICULTY = 100;
 
   /**
-   * A lock object to synchronize multiple threads on.
+   * The name of the algorithm.
    */
-  public final static Object LOCK = new Object();
+  public final static String NAME = "m";
 
   /**
    * The difficulty.
    */
-  private final double difficulty;
+  private final int difficulty;
 
   /**
    * The set of all passable cells. The non passable cells are the difference between all cells and the passable cells.
@@ -77,22 +74,15 @@ public class M extends AbstractMazeAlgorithm {
   private final Set<Cell> passableCellSet = new LinkedHashSet<>();
 
   /**
-   * Path to a file where statistics should be written. {@code null} if none should be written.
-   */
-  private String writeStatisticsPath;
-
-  /**
    * The constructor.
    *
-   * @param width               The width of the maze to generate.
-   * @param height              The height of the maze to generate.
-   * @param random              The random number generator object to use when creating the maze.
-   * @param difficulty          The difficulty of the maze to generate. It should be a value between 0 and 100, where 0
-   *                            is the
-   * @param writeStatisticsPath Path to a file where statistics should be written. {@code null} if none should be
-   *                            written.
+   * @param width      The width of the maze to generate.
+   * @param height     The height of the maze to generate.
+   * @param random     The random number generator object to use when creating the maze.
+   * @param difficulty The difficulty of the maze to generate. It should be a value between 0 and 100, where 0
+   *                   is the easiest and 100 is the hardest.
    */
-  public M(int width, int height, Random random, int difficulty, String writeStatisticsPath) {
+  public M(int width, int height, Random random, int difficulty) {
     super(width, height, random);
 
     if (difficulty < 0)
@@ -101,8 +91,6 @@ public class M extends AbstractMazeAlgorithm {
       this.difficulty = MAXIMUM_DIFFICULTY;
     else
       this.difficulty = difficulty;
-
-    this.writeStatisticsPath = writeStatisticsPath;
   }
 
   /**
@@ -131,10 +119,6 @@ public class M extends AbstractMazeAlgorithm {
 
     // 3. Run Prim on the not passable area beginning with a random cell
     primOnCellSet(getNonPassableCells());
-
-    // Print statistics if requested
-    if (writeStatisticsPath != null)
-      writeStatistics();
   }
 
   /**
@@ -189,7 +173,8 @@ public class M extends AbstractMazeAlgorithm {
     if (level.isBiggerEqualThan(HARD)) {
       for (int i = 0; i < pathCells.size(); i++) {
         final Cell oldCell = pathCells.get(i);
-        final int deltaPosition = DASH_DISTANCE - random.nextInt(DASH_DISTANCE_DELTA_FACTOR * DASH_DISTANCE + 1);
+        final int deltaPosition = DASH_DISTANCE_DELTA_FACTOR * DASH_DISTANCE
+            - random.nextInt(2 * DASH_DISTANCE_DELTA_FACTOR * DASH_DISTANCE + 1);
         int newPosition;
 
         if (shorterSide == HORIZONTAL) {
@@ -224,7 +209,7 @@ public class M extends AbstractMazeAlgorithm {
 
     ///////
     // 5. Build the path and add the cells to the passable cell set
-    final double pathWidth = difficulty / MAXIMUM_DIFFICULTY * shorterSideLength * SHORTER_SIDE_PERCENTAGE;
+    final double pathWidth = (double) difficulty / MAXIMUM_DIFFICULTY * shorterSideLength * SHORTER_SIDE_PERCENTAGE;
 
     for (int i = 0; i < pathCells.size() - 1; i++) {
       final WidthCalculatedPath pathSegment = new WidthCalculatedPath(pathCells.get(i), pathCells.get(i + 1), output, pathWidth);
@@ -303,38 +288,6 @@ public class M extends AbstractMazeAlgorithm {
   }
 
   /**
-   * Writes statistics about the generated maze the file located at {@link #writeStatisticsPath}.
-   *
-   * @throws IOException if it can't write the statistics to the specified file.
-   */
-  private void writeStatistics() throws IOException {
-    String text = "" +
-        // identifier
-        output.hashCode() + "," +
-
-        // dimensions
-        output.getWidth() + "," +
-        output.getHeight() + "," +
-
-        // number of all cells
-        output.getWidth() * output.getHeight() + "," +
-
-        // number of passable cells
-        getPassableCellSet().size() + "," +
-
-        // number of non-passable cells
-        getNonPassableCells().size();
-
-    // TODO: how to lower the synchronization if write happens to different files?
-    synchronized (LOCK) {
-      try (PrintWriter fileWriter = new PrintWriter(new FileWriter(writeStatisticsPath, true))) {
-        fileWriter.println(text);
-        fileWriter.flush();
-      }
-    }
-  }
-
-  /**
    * The difficulty of the maze to generate.
    *
    * @return The difficulty.
@@ -363,20 +316,31 @@ public class M extends AbstractMazeAlgorithm {
   }
 
   /**
-   * Returns the path to a file where statistics should be written. {@code null} if none should be written.
+   * Returns the name of the object.
    *
-   * @return The path to a file where statistics should be written.
+   * @return The name of the object.
    */
-  public String getWriteStatisticsPath() {
-    return writeStatisticsPath;
+  @Override
+  public String getName() {
+    return NAME;
   }
 
   /**
-   * Sets the path to a file where statistics should be written. Pass {@code null} if none should be written.
+   * Returns statistics about this object in a CSV formatted string.
    *
-   * @param writeStatisticsPath The new path or {@code null}.
+   * @return A CSV formatted string.
    */
-  public void setWriteStatisticsPath(String writeStatisticsPath) {
-    this.writeStatisticsPath = writeStatisticsPath;
+  @Override
+  public String getStatistics() {
+    return super.getStatistics() + "," +
+        // number of passable cells
+        getPassableCellSet().size() + "," +
+
+        // number of non-passable cells
+        getNonPassableCells().size() + "," +
+
+        // difficulty
+        difficulty + "," +
+        DifficultyLevel.getDifficultyLevel(difficulty, MAXIMUM_DIFFICULTY);
   }
 }

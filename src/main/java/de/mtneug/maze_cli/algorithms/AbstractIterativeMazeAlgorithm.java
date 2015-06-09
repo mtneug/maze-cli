@@ -73,4 +73,14 @@ public abstract class AbstractIterativeMazeAlgorithm extends AbstractMazeAlgorit
   public long getSteps() {
     return steps;
   }
+
+  /**
+   * Returns statistics about this object in a CSV formatted string.
+   *
+   * @return A CSV formatted string.
+   */
+  @Override
+  public String getStatistics() {
+    return super.getStatistics() + "," + getSteps();
+  }
 }

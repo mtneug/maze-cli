@@ -10,20 +10,20 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 
 /**
- * Maze output, which outputs statistics of the run solver.
+ * Maze output, which outputs statistics.
  *
  * @author Matthias Neugebauer
  * @version 1.0
  * @since 1.0
  */
-public class SolverOutput extends AbstractMazeOutput {
+public class StatisticsOutput extends AbstractMazeOutput {
   /**
    * A lock object to synchronize multiple threads on.
    */
   public final static Object LOCK = new Object();
 
   /**
-   * Path to a file where statistics should be written. {@code null} if none should be written.
+   * Path to a file where statistics should be written.
    */
   private String writeStatisticsPath;
 
@@ -34,8 +34,12 @@ public class SolverOutput extends AbstractMazeOutput {
    * @param writeStatisticsPath Path to a file where statistics should be written.
    * @throws IllegalArgumentException if {@code writeStatisticsPath} is {@code null}.
    */
-  public SolverOutput(MazeSolutions mazeSolutions, String writeStatisticsPath) {
+  public StatisticsOutput(MazeSolutions mazeSolutions, String writeStatisticsPath) {
     super(mazeSolutions);
+
+    if (writeStatisticsPath == null)
+      throw new IllegalArgumentException("writeStatisticsPath can't be null");
+
     setWriteStatisticsPath(writeStatisticsPath);
   }
 
@@ -46,37 +50,16 @@ public class SolverOutput extends AbstractMazeOutput {
    */
   @Override
   public Object call() throws Exception {
-    String solutionsLenght = "";
-
-    for (int i = 0; i < mazeSolutions.getSolutions().size(); i++) {
-      if (i == 0)
-        solutionsLenght += mazeSolutions.getSolutions().get(i).getPathCells().size();
-      else
-        solutionsLenght += ";" + mazeSolutions.getSolutions().get(i).getPathCells().size();
-    }
-
-    String text = "" +
-        // identifier
-        mazeSolutions.getMaze().hashCode() + "," +
-
-        // dimensions
-        mazeSolutions.getMaze().getWidth() + "," +
-        mazeSolutions.getMaze().getHeight() + "," +
-
-        // number of all cells
-        mazeSolutions.getMaze().getWidth() * mazeSolutions.getMaze().getHeight() + "," +
-
-        // solver statistics
-        mazeSolutions.getMazeSolver().getSteps() + "," +
-
-        // number and length of solutions
-        mazeSolutions.getSolutions().size() + "," +
-        solutionsLenght;
+    String csvStatistics = "" +
+        mazeSolutions.getMaze().getStatistics() + "," +
+        mazeSolutions.getMaze().getMazeAlgorithm().getStatistics() + "," +
+        mazeSolutions.getStatistics() + "," +
+        mazeSolutions.getMazeSolver().getStatistics();
 
     // TODO: how to lower the synchronization if write happens to different files?
     synchronized (LOCK) {
       try (PrintWriter fileWriter = new PrintWriter(new FileWriter(writeStatisticsPath, true))) {
-        fileWriter.println(text);
+        fileWriter.println(csvStatistics);
         fileWriter.flush();
       }
     }

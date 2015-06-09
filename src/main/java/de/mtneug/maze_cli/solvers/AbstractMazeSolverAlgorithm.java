@@ -4,10 +4,7 @@
 
 package de.mtneug.maze_cli.solvers;
 
-import de.mtneug.maze_cli.model.AbstractAlgorithm;
-import de.mtneug.maze_cli.model.Maze;
-import de.mtneug.maze_cli.model.MazeSolutions;
-import de.mtneug.maze_cli.model.MazeSolverAlgorithm;
+import de.mtneug.maze_cli.model.*;
 
 /**
  * Base class for all maze solver algorithms.
@@ -48,5 +45,15 @@ public abstract class AbstractMazeSolverAlgorithm extends AbstractAlgorithm<Maze
   @Override
   public long getSteps() {
     return steps;
+  }
+
+  /**
+   * Returns statistics about this object in a CSV formatted string.
+   *
+   * @return A CSV formatted string.
+   */
+  @Override
+  public String getStatistics() {
+    return super.getStatistics() + "," + getSteps();
   }
 }

@@ -38,8 +38,7 @@ public class MAdapter extends AbstractMazeAlgorithmCliAdapter {
         width,
         height,
         createRandom(commandLine),
-        ((Long) commandLine.getParsedOptionValue("m-difficulty")).intValue(),
-        commandLine.getOptionValue("m-write-statistics-path")
+        ((Long) commandLine.getParsedOptionValue("m-difficulty")).intValue()
     );
   }
 
@@ -55,12 +54,6 @@ public class MAdapter extends AbstractMazeAlgorithmCliAdapter {
             .longOpt("m-difficulty")
             .desc("set DIFF a number between 0 and 100 as the desired difficulty")
             .hasArg().numberOfArgs(1).argName("DIFF").type(NUMBER_VALUE)
-            .build()
-    );
-    options.addOption(Option.builder()
-            .longOpt("m-write-statistics-path")
-            .desc("write statistics to PATH")
-            .hasArg().numberOfArgs(1).argName("PATH").type(STRING_VALUE)
             .build()
     );
   }

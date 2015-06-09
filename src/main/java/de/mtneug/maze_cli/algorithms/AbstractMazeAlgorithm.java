@@ -37,7 +37,7 @@ public abstract class AbstractMazeAlgorithm extends AbstractAlgorithm<Maze> {
    */
   public AbstractMazeAlgorithm(int width, int height, Random random) {
     this.random = random;
-    this.output = new Maze(width, height);
+    this.output = new Maze(width, height, this);
     prepareMaze();
   }
 

@@ -20,6 +20,11 @@ import java.util.*;
 @Solver(name = "tremaux")
 public class TremauxMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
   /**
+   * Name of the algorithm.
+   */
+  public final static String NAME = "tremaux";
+
+  /**
    * TODO: make more general
    */
   protected final Random random = new Random();
@@ -33,6 +38,21 @@ public class TremauxMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
    * A map of encountered places with there cells.
    */
   private final Map<Cell, Place> places = new LinkedHashMap<>();
+
+  /**
+   * Number of how many times a place has been encountered.
+   */
+  private long totalPlaceVisits = 0;
+
+  /**
+   * Number of places, which lie on the found solution.
+   */
+  private long placesPartOfSolution = 0;
+
+  /**
+   * Length of dead ends.
+   */
+  private List<Long> deadEnds = new ArrayList<>();
 
   /**
    * The constructor.
@@ -72,9 +92,17 @@ public class TremauxMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
    */
   private boolean handlePlace(Maze maze, Cell cell, Direction comingFrom, SimpleCorrectPath path) {
     boolean isNewPlace = !places.containsKey(cell);
+    totalPlaceVisits++;
 
     if (isNewPlace)
       places.put(cell, new Place(cell));
+
+    if (cell.getLinkedDirections().isEmpty()) {
+      // it is not possible to go anywhere from this cell
+      // this can only happen, if this is the start cell
+      deadEnds.add(1L);
+      return false;
+    }
 
     final Place place = places.get(cell);
 
@@ -93,11 +121,6 @@ public class TremauxMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
       return false;
     }
 
-    if (cell.getLinkedDirections().isEmpty())
-      // it is not possible to go anywhere from this cell
-      // this can only happen, if this is the start cell
-      return false;
-
     // being here means that there are still directions we can follow
 
     // choose direction to follow
@@ -107,6 +130,7 @@ public class TremauxMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
 
     if (follow(maze, cell, chosenDirection, subPath)) {
       // the direction did lead to the end
+      placesPartOfSolution++;
       path.merge(subPath);
       return true;
     } else
@@ -149,6 +173,7 @@ public class TremauxMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
 
         case 1:
           // dead end => not part of the solution
+          deadEnds.add(subSteps);
           steps += 2 * subSteps;
           return false;
 
@@ -169,5 +194,50 @@ public class TremauxMazeSolverAlgorithm extends AbstractMazeSolverAlgorithm {
           return partOfSolution;
       }
     }
+  }
+
+  /**
+   * Returns the name of the object.
+   *
+   * @return The name of the object.
+   */
+  @Override
+  public String getName() {
+    return NAME;
+  }
+
+  /**
+   * Returns statistics about this object in a CSV formatted string.
+   *
+   * @return A CSV formatted string.
+   */
+  @Override
+  public String getStatistics() {
+    return super.getStatistics() + "," +
+        // place statistics
+        places.size() + "," +
+        placesPartOfSolution + "," +
+        totalPlaceVisits + "," +
+
+        // dead ends
+        deadEnds.size() + "," +
+        calculateDeadEndsMean();
+  }
+
+  /**
+   * Calculates the mean length of a dead end.
+   *
+   * @return The mean length of a dead end.
+   */
+  private double calculateDeadEndsMean() {
+    if (deadEnds.size() == 0)
+      return 0;
+
+    double sum = 0;
+
+    for (Long length : deadEnds)
+      sum += length;
+
+    return sum / deadEnds.size();
   }
 }

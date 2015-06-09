@@ -18,7 +18,7 @@ import static de.mtneug.maze_cli.model.AlgorithmState.*;
  * @version 1.0
  * @since 1.0
  */
-public abstract class AbstractAlgorithm<T> implements Callable<T> {
+public abstract class AbstractAlgorithm<T> implements Callable<T>, Nameable, CsvStatisticable {
   /**
    * The current state the algorithm is in.
    */
@@ -75,5 +75,15 @@ public abstract class AbstractAlgorithm<T> implements Callable<T> {
    */
   public T getOutput() {
     return output;
+  }
+
+  /**
+   * Returns statistics about this object in a CSV formatted string.
+   *
+   * @return A CSV formatted string.
+   */
+  @Override
+  public String getStatistics() {
+    return getName();
   }
 }

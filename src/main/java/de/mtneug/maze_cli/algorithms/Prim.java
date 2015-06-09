@@ -31,6 +31,11 @@ public class Prim extends AbstractIterativeMazeAlgorithm {
   public final static String MARK = "visited";
 
   /**
+   * The name of the algorithm.
+   */
+  public static final String NAME = "prim";
+
+  /**
    * The set of walls i.e. cell and associated direction, which still needs to be looked at.
    */
   private final Set<Wall> wallSet = new LinkedHashSet<>();
@@ -99,5 +104,15 @@ public class Prim extends AbstractIterativeMazeAlgorithm {
     for (Map.Entry<Direction, Cell> entry : cell.getNeighbors().entrySet())
       if (!entry.getValue().getLabels().contains(MARK))
         wallSet.add(new Wall(cell, entry.getKey()));
+  }
+
+  /**
+   * Returns the name of the object.
+   *
+   * @return The name of the object.
+   */
+  @Override
+  public String getName() {
+    return NAME;
   }
 }
