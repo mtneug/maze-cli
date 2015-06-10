@@ -26,7 +26,7 @@ public class SeminarSerializationOutput extends AbstractMazeOutput {
   public final static String PROTOCOL_WALL = "W";
   public final static String PROTOCOL_PATH = "P";
   public final static String PROTOCOL_START = "S";
-  public final static String PROTOCOL_END = "E";
+  public final static String PROTOCOL_END = "F";
 
   /**
    * Path to a file where the serialization should be written.
