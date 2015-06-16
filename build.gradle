@@ -41,7 +41,7 @@ task generateHeatMapStatistics(dependsOn: [classes, createStatisticsDataDir]) {
               '100',
               w + ':' + h,
               'm', '--secure-random', '--m-difficulty=' + d,
-              'solver', '--solver-name=tremaux', '--statistics-file=' + project.buildDir + '/data/heatmap-statistics.csv'
+              'statistics', '--solver-name=tremaux', '--file=' + project.buildDir + '/data/heatmap-statistics.csv'
             ]
           }
 
@@ -67,7 +67,7 @@ task generateStatistics(dependsOn: [classes, createStatisticsDataDir]) {
           '5000',
           '100:50',
           'm', '--secure-random', '--m-difficulty=' + i,
-          'solver', '--solver-name=tremaux', '--statistics-file=' + project.buildDir + '/data/solver-statistics.csv'
+          'statistics', '--solver-name=tremaux', '--file=' + project.buildDir + '/data/solver-statistics.csv'
         ]
       }
 

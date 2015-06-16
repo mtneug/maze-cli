@@ -21,8 +21,8 @@ import static org.apache.commons.cli.PatternOptionBuilder.STRING_VALUE;
  * @version 1.0
  * @since 1.0
  */
-@OutputAdapter(name = "solver")
-public class StatisticsAdapter extends AbstractMazeOutputCliAdapter {
+@OutputAdapter(name = "statistics")
+public class StatisticsAdapter extends AbstractFileOutputAdapter {
   /**
    * Code to instantiate a new maze statistics output configured with the given parameters.
    *
@@ -35,7 +35,7 @@ public class StatisticsAdapter extends AbstractMazeOutputCliAdapter {
   public AbstractMazeOutput doGenerate(MazeSolutions mazeSolutions, CommandLine commandLine) throws ParseException {
     return new StatisticsOutput(
         mazeSolutions,
-        commandLine.getOptionValue("statistics-file")
+        getPath(commandLine)
     );
   }
 
@@ -48,13 +48,5 @@ public class StatisticsAdapter extends AbstractMazeOutputCliAdapter {
 
     // Set this options as required so the user is forced to think which solver to use.
     options.getOption("s").setRequired(true);
-
-    options.addOption(Option.builder()
-            .required(true)
-            .longOpt("statistics-file")
-            .desc("write statistics to PATH")
-            .hasArg().numberOfArgs(1).argName("PATH").type(STRING_VALUE)
-            .build()
-    );
   }
 }
