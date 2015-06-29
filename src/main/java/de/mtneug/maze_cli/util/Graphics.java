@@ -74,8 +74,8 @@ public final class Graphics {
 
     double
         // delta
-        dxCurrent = dx - 4 / 9,
-        dyCurrent = -dy - 4 / 9,
+        dxCurrent = dx - 1 / 2,
+        dyCurrent = -dy - 1 / 2,
 
         // error
         err = dx + dy,
