@@ -15,7 +15,7 @@ import java.util.Set;
 
 /**
  * Implementation of the Prim algorithm for maze generation. Loosely based on the
- * <a hreg="http://en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_Prim.27s_algorithm">Wikipedia
+ * <a href="http://en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_Prim.27s_algorithm">Wikipedia
  * description.</a>
  *
  * @author Matthias Neugebauer
